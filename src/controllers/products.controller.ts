@@ -2,29 +2,22 @@ import {
   Controller,
   Get,
   Param,
-  Query,
   Post,
   Body,
   Put,
   Delete,
-  HttpStatus,
-  HttpCode,
 } from '@nestjs/common';
+import { ParseIntPipe } from '@nestjs/common';
+
+import { ProductService } from './../services/product.service';
 
 @Controller('products')
 export class ProductsController {
+  constructor(private productService: ProductService) {}
+
   @Get('/')
-  produts(
-    @Query('limit') limit = 100,
-    @Query('offset') offset = 0,
-    @Query('brand') brand: string,
-  ): object {
-    console.log('limit', limit);
-    return {
-      limit,
-      offset,
-      brand,
-    };
+  products(): object {
+    return this.productService.findAll();
   }
 
   @Get('/filter')
@@ -32,20 +25,19 @@ export class ProductsController {
     return { message: 'yo soy un filter' };
   }
 
-  @Get('/:productId')
-  @HttpCode(HttpStatus.ACCEPTED)
-  get(@Param('productId') productId: string): object {
-    return { message: `product ${productId}` };
+  @Get('/:id')
+  get(@Param('id', ParseIntPipe) id: number): object {
+    return this.productService.findOne(id);
   }
 
   @Post()
   create(@Body() payload: any): object {
-    return { message: 'yo soy un post', payload };
+    return this.productService.create(payload);
   }
 
   @Put('/:id')
-  update(@Param('id') id: number, @Body() payload: any): object {
-    return { id, payload };
+  update(@Param('id', ParseIntPipe) id: number, @Body() payload: any): object {
+    return this.productService.update(id, payload);
   }
 
   @Delete('/:id')
