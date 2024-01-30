@@ -1,15 +1,16 @@
 import {
+  // ParseIntPipe,
   Controller,
-  Get,
+  Delete,
   Param,
   Post,
   Body,
   Put,
-  Delete,
+  Get,
 } from '@nestjs/common';
-import { ParseIntPipe } from '@nestjs/common';
 
 import { ProductService } from './../services/product.service';
+import { ParseIntPipe } from './../common/parse-int/parse-int.pipe';
 
 @Controller('products')
 export class ProductsController {
